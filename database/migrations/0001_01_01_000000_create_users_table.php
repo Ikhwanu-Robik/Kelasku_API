@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone_country')->default('ID');
             $table->string('phone')->unique();
-            $table->string('phone_raw')->unique();
             $table->string('password');
-            $table->string('motto');
+            $table->string('photo')->nullable();
+            $table->string('motto')->nullable();
+            $table->foreignId('school_id');
             $table->rememberToken();
             $table->timestamps();
         });
