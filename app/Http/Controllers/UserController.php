@@ -55,7 +55,30 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'motto' => 'sometimes',
+            'photo' => 'sometimes|image|max:2048|dimensions:ratio=1/1',
+            'school' => 'required|exists:schools,id'
+        ]);
+
+        if ($id != Auth::id()) {
+            return $this->error("Forbidden", 403);
+        }
+
+        if ($validated['photo']) {
+            $path_name = $request->file('photo')->storePublicly('profile_photos');
+        }
+
+        $user = User::find($id);
+        $user->name = $validated['firstname'] . " " . $validated['lastname'];
+        $user->school_id = $validated['school'];
+        $user->motto = $validated['motto'] ?? NULL;
+        $user->photo = $path_name ?? NULL;
+        $user->save();
+
+        return $this->success(null, "Profil berhasil diubah");
     }
 
     /**
