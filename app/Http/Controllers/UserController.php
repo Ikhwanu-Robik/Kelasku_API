@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\JSONAPIResponse;
-use App\Models\User;
 use Exception;
+use App\Models\User;
+use App\JSONAPIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -16,15 +18,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
+        try {
+            $users = User::where('id', '!=', Auth::id())->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+            if ($users->count() == 0) {
+                return $this->error('Not found', 404);
+            }
+
+            return $this->success($users, "Data teman berhasil dimuat");
+        } catch (Exception $e) {
+            return $this->error('Data teman gagal dimuat', 500);
+        }
     }
 
     /**
@@ -35,6 +39,10 @@ class UserController extends Controller
         $user = null;
         try {
             $user = User::findOrFail($id);
+
+            if (!$user) {
+                return $this->error('Not found', 404);
+            }
         } catch (Exception $e) {
             return $this->error('User tidak ditemukan', 404);
         }
