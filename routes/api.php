@@ -1,14 +1,18 @@
 <?php
 
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisteredUserController;
-use App\Http\Controllers\AuthenticatedSessionController;
 
 Route::middleware('guest')->group(function () {
-    Route::post('/register', RegisteredUserController::class);
-    Route::post('/login', AuthenticatedSessionController::class);
+    Route::post('/register', RegisterController::class);
+    Route::post('/login', LoginController::class);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('users', UserController::class);
+});
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
