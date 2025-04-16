@@ -82,6 +82,33 @@ class UserController extends Controller
     }
 
     /**
+     * Update the specified user's password in storage
+     */
+    public function updatePassword(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'old_password' => 'required',
+            'password' => 'required|min:8|confirmed'
+        ]);
+
+        $user = User::find($id);
+
+        if (
+            !Auth::attempt([
+                'phone' => $user->phone,
+                'password' => $validated['old_password']
+            ])
+        ) {
+            return $this->error('Unauthorized', 403);
+        }
+
+        $user->password = $validated['password'];
+        $user->save();
+
+        return $this->success(null, 'Password berhasil diganti');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
