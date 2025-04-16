@@ -67,7 +67,7 @@ class UserController extends Controller
             return $this->error("Forbidden", 403);
         }
 
-        if ($validated['photo']) {
+        if (isset($validated['photo'])) {
             $path_name = $request->file('photo')->storePublicly('profile_photos');
         }
 
