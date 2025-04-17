@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ColekController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
@@ -19,8 +20,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
 
-    Route::put('/logout', LogoutController::class);
+    Route::post('/logout', LogoutController::class);
+
+    Route::post('/users/{user}/colek', ColekController::class);
+
+    Route::post('/logout', [UserController::class, 'logout']);
 });
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+

@@ -111,4 +111,14 @@ class UserController extends Controller
     {
         //
     }
+
+    public function logout(Request $request) {
+        try {
+            $request->user()->tokens()->delete();
+        } catch (Exception $e) {
+            return $this->error('Logout gagal');
+        }
+
+        return $this->success(null, 'Berhasil logout');
+    }
 }
