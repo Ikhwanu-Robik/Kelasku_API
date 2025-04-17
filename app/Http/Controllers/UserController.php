@@ -6,8 +6,8 @@ use Exception;
 use App\Models\User;
 use App\JSONAPIResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -93,12 +93,8 @@ class UserController extends Controller
 
         $user = User::find($id);
 
-        if (
-            !Auth::attempt([
-                'phone' => $user->phone,
-                'password' => $validated['old_password']
-            ])
-        ) {
+        if (Hash::make($validated['password']) == $user->password)
+        {
             return $this->error('Unauthorized', 403);
         }
 
