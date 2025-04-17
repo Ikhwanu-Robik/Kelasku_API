@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Propaganistas\LaravelPhone\PhoneNumber;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -39,6 +40,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $appends = ['whatsapp_link'];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -69,6 +72,17 @@ class User extends Authenticatable
 
     public function getLastName() {
         return explode(' ', $this->name)[1];
+    }
+
+    protected function whatsappLink(): Attribute
+    {
+        return new Attribute(
+            get: function () {
+                $wa_phone = new PhoneNumber($this->phone, $this->phone_country);
+                $wa_phone = $wa_phone->formatE164();
+                return 'https://wa.me/' . $wa_phone;
+            }
+        );
     }
 
     public function routeNotificationForFcm()
