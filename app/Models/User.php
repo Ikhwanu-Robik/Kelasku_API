@@ -70,4 +70,9 @@ class User extends Authenticatable
     public function getLastName() {
         return explode(' ', $this->name)[1];
     }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
+    }
 }
