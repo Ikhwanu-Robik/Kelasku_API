@@ -92,10 +92,15 @@ class UserController extends Controller
         ]);
 
         $user = User::find($id);
+        $changer = User::find(Auth::id());
 
-        if (Hash::make($validated['password']) == $user->password)
+        if ($user != $changer) {
+            return $this->error('Kamu tidak boleh mengganti password orang lain!', 403);
+        }
+
+        if (Hash::make($validated['old_password']) != $user->password)
         {
-            return $this->error('Unauthorized', 403);
+            return $this->error('Password lama tidak salah', 403);
         }
 
         $user->password = $validated['password'];
