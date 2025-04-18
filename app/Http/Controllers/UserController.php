@@ -64,7 +64,7 @@ class UserController extends Controller
         ]);
 
         if ($id != Auth::id()) {
-            return $this->error("Forbidden", 403);
+            return $this->error("Kamu tidak boleh merubah profil orang lain!", 403);
         }
 
         if (isset($validated['photo'])) {
