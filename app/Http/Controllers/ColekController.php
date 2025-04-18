@@ -17,7 +17,7 @@ class ColekController extends Controller
      */
     public function __invoke(Request $request, User $user)
     {
-        $user->notifyNow(new ColekNotification(User::firstWhere('id', '=', Auth::id())));
+        $user->notify(new ColekNotification(User::firstWhere('id', '=', Auth::id())));
 
         return $this->success(null, "Kamu Telah Mencolek Teman Mu!");
     }
