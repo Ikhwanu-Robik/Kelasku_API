@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
 use App\JSONAPIResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,11 @@ class ColekController extends Controller
      */
     public function __invoke(Request $request, User $user)
     {
-        $user->notify(new ColekNotification(User::firstWhere('id', '=', Auth::id())));
+        try {
+            $user->notify(new ColekNotification(User::firstWhere('id', '=', Auth::id())));
+        } catch (Exception $e) {
+            return $this->error('Gagal mencolek teman', 500);
+        }
 
         return $this->success(null, "Kamu Telah Mencolek Teman Mu!");
     }
