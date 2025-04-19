@@ -9,4 +9,8 @@ class School extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function studentProfile() {
+        return $this->hasMany(StudentProfile::class);
+    }
 }

@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::where('id', '!=', Auth::id())->get();
+            $users = User::with(['studentProfile', 'studentProfile.school'])->where('id', '!=', Auth::id())->get();
 
             if ($users->count() == 0) {
                 return $this->error('Not found', 404);
@@ -38,11 +38,8 @@ class UserController extends Controller
     {
         $user = null;
         try {
-            $user = User::findOrFail($id);
+            $user = User::with(['studentProfile', 'studentProfile.school'])->findOrFail($id);
 
-            if (!$user) {
-                return $this->error('Not found', 404);
-            }
         } catch (Exception $e) {
             return $this->error('User tidak ditemukan', 404);
         }
@@ -73,9 +70,10 @@ class UserController extends Controller
 
         $user = User::find($id);
         $user->name = $validated['firstname'] . " " . $validated['lastname'];
-        $user->school_id = $validated['school'];
-        $user->motto = $validated['motto'] ?? NULL;
-        $user->photo = $path_name ?? NULL;
+        $user->studentProfile->school_id = $validated['school'];
+        $user->studentProfile->motto = $validated['motto'] ?? NULL;
+        $user->studentProfile->photo = $path_name ?? NULL;
+        $user->studentProfile->save();
         $user->save();
 
         return $this->success(null, "Profil berhasil diubah");
@@ -98,9 +96,11 @@ class UserController extends Controller
             return $this->error('Kamu tidak boleh mengganti password orang lain!', 403);
         }
 
+        // TODO :
+        // I still have difficulty comparing old password
         if (Hash::make($validated['old_password']) != $user->password)
         {
-            return $this->error('Password lama tidak salah', 403);
+            return $this->error('Password lama salah', 403);
         }
 
         $user->password = $validated['password'];

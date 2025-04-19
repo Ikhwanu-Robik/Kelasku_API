@@ -24,9 +24,6 @@ class User extends Authenticatable
         'name',
         'phone_country',
         'phone',
-        'school_id',
-        'photo',
-        'motto',
         'password',
     ];
 
@@ -89,5 +86,13 @@ class User extends Authenticatable
     public function routeNotificationForFcm()
     {
         return $this->fcm_token;
+    }
+
+    public function studentProfile() {
+        return $this->hasOne(StudentProfile::class);
+    }
+
+    public function adminProfile() {
+        return $this->hasOne(AdminProfile::class);
     }
 }

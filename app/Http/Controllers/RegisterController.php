@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StudentProfile;
 use Exception;
 use App\Models\User;
 use App\JSONAPIResponse;
@@ -32,12 +33,16 @@ class RegisterController extends Controller
         }
 
         try {
-            User::create([
+            $user = User::create([
                 'name' => $validated['firstname'] . " " . $validated['lastname'],
                 'phone_country' => $validated['phone_country'],
                 'phone' => $validated['phone'],
-                'school_id' => $validated['school'],
                 'password' => Hash::make($validated['password']),
+            ]);
+
+            StudentProfile::create([
+                'user_id' => $user->id,
+                'school_id' => $validated['school'],
             ]);
         } catch (Exception $e) {
             return $this->error('Gagal membuat akun', 500);
