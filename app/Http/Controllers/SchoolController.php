@@ -30,33 +30,27 @@ class SchoolController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required'
+        ]);
+
+        try {
+            School::create(['name' => $validated['name']]);
+        } catch (Exception $e) {
+            $this->error('Server error', 500);
+        }
+
+        return $this->success(null, "Berhasil menambahkan sekolah");
     }
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }
