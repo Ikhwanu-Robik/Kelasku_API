@@ -96,9 +96,7 @@ class UserController extends Controller
             return $this->error('Kamu tidak boleh mengganti password orang lain!', 403);
         }
 
-        // TODO :
-        // I still have difficulty comparing old password
-        if (Hash::make($validated['old_password']) != $user->password)
+        if (!Hash::check($validated['old_password'], $user->password))
         {
             return $this->error('Password lama salah', 403);
         }
