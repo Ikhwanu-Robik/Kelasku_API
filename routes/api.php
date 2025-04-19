@@ -23,7 +23,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', LogoutController::class);
 
     Route::post('/users/{user}/colek', ColekController::class);
-
-    Route::post('/logout', [UserController::class, 'logout']);
 });
 
