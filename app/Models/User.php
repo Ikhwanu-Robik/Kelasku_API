@@ -56,7 +56,13 @@ class User extends Authenticatable
     public function photo(): Attribute
     {
         return Attribute::make(
-            get: fn ($photo) => config('app.url') . '/storage/' . $photo
+            get: function ($photo) {
+                if (!$photo) {
+                    return null;
+                }
+
+                return config('app.url') . '/storage/' . $photo;
+            }
         );
     }
     public $casts = [
