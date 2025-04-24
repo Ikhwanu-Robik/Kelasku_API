@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::with(['studentProfile', 'studentProfile.school'])->where('id', '!=', Auth::id())->get();
+            $users = User::where('id', '!=', Auth::id())->get();
 
             if ($users->count() == 0) {
                 return $this->error('Not found', 404);
@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $user = null;
         try {
-            $user = User::with(['studentProfile', 'studentProfile.school'])->findOrFail($id);
+            $user = User::findOrFail($id);
 
         } catch (Exception $e) {
             return $this->error('User tidak ditemukan', 404);

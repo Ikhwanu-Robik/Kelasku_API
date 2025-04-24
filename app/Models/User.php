@@ -38,7 +38,7 @@ class User extends Authenticatable
         'fcm_token'
     ];
 
-    protected $appends = ['whatsapp_link'];
+    protected $appends = ['whatsapp_link', 'photo', 'motto', 'school_id'];
 
     /**
      * Get the attributes that should be cast.
@@ -53,18 +53,42 @@ class User extends Authenticatable
         ];
     }
 
-    public function photo(): Attribute
+    protected function photo(): Attribute
     {
         return Attribute::make(
-            get: function ($photo) {
-                if (!$photo) {
-                    return null;
+            get: function () {
+                $student_profile = $this->studentProfile()->first();
+                if (!$student_profile->photo) {
+                return null;
                 }
-
-                return config('app.url') . '/storage/' . $photo;
+    
+                return config('app.url') . '/storage/' . $student_profile->photo;
             }
         );
     }
+
+    protected function motto() : Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $student_profile = $this->studentProfile()->first();
+
+                return $student_profile->motto;
+            }
+        );
+    }
+
+    protected function schoolId(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $student_profile = $this->studentProfile()->first();
+
+                return $student_profile->school_id;
+            }
+        );
+    }
+
     public $casts = [
         'phone_raw' => RawPhoneNumberCast::class,
         'phone_e164' => E164PhoneNumberCast::class,
