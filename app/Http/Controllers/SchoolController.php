@@ -41,7 +41,7 @@ class SchoolController extends Controller
         try {
             School::create(['name' => $validated['name']]);
         } catch (Exception $e) {
-            $this->error('Server error', 500);
+            return $this->error('Server error', 500);
         }
 
         return $this->success(null, "Berhasil menambahkan sekolah");
@@ -52,7 +52,13 @@ class SchoolController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $school = School::findOrFail($id);
+
+            return $this->success($school, "Berhasil mendapatkan data sekolah");
+        } catch (Exception $e) {
+            return $this->error("Server error", 500);
+        }
     }
 
     /**

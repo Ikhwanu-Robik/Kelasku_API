@@ -14,6 +14,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', LoginController::class);
 
     Route::get('/schools', [SchoolController::class, 'index']);
+    Route::get('/schools/{school}', [SchoolController::class, 'show']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
