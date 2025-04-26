@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\JSONAPIResponse;
-use App\Models\School;
 use Exception;
+use App\Models\School;
+use App\JSONAPIResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SchoolController extends Controller
 {
@@ -74,6 +75,15 @@ class SchoolController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $school = School::findOrFail($id);
+
+            $school->deleteOrFail();
+
+            return $this->success(null, "Berhasil menghapus sekolah");
+        } catch (Exception $e) {
+            Log::info($e);
+            return $this->error('Gagal menghapus sekolah', 500);
+        }
     }
 }
