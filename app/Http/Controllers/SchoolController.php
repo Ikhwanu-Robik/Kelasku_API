@@ -67,7 +67,17 @@ class SchoolController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate(["name" => "required"]);
+        
+        try {
+            $school = School::findOrFail($id);
+            $school->name = $validated["name"];
+            $school->saveOrFail();
+    
+            return $this->success(null, "Berhasil mengubah data sekolah");
+        } catch (Exception $e) {
+            return $this->error("Gagal mengubah data sekolah");
+        }
     }
 
     /**
@@ -82,7 +92,6 @@ class SchoolController extends Controller
 
             return $this->success(null, "Berhasil menghapus sekolah");
         } catch (Exception $e) {
-            Log::info($e);
             return $this->error('Gagal menghapus sekolah', 500);
         }
     }
