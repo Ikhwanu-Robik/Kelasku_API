@@ -21,7 +21,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('users', UserController::class)->except('store');
+    Route::apiResource('users', UserController::class)->except('store', 'destroy');
 
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
 
@@ -34,4 +34,5 @@ Route::middleware(['auth:sanctum', EnsureUserIsAdmin::class])->group(function ()
     Route::post('/schools', [SchoolController::class, 'store']);
     Route::put('/schools/{school}/', [SchoolController::class, 'update']);
     Route::delete('/schools/{school}', [SchoolController::class, 'destroy']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
