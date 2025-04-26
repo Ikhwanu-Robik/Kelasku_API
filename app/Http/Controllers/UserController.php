@@ -121,4 +121,38 @@ class UserController extends Controller
             return $this->error("Gagal menghapus user");
         }
     }
+ 
+    public function adminUpdate(Request $request, string $id) {
+        $validated = $request->validate([
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
+            'school_id' => 'required|exists:schools,id',
+            'photo' => 'sometimes|image|max:2048|dimensions:ratio=1/1',
+            'motto' => 'sometimes|string',
+            'password' => 'required|min:8'
+        ]);
+
+        if (isset($validated['photo'])) {
+            $path = $request->file('photo')->storePublicly('profile_photos');
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            $user->name = $validated['firstname'] . " " . $validated['lastname'];
+            $user->studentProfile->school_id = $validated['school_id'];
+            if (isset($validated['photo'])) {
+                $user->studentProfile->photo = $path ?? NULL;
+            }
+            if (isset($validated['motto'])) {
+                $user->studentProfile->motto = $validated['motto'] ?? NULL;
+            }
+            $user->studentProfile->saveOrFail();
+            $user->password = $validated['password'];
+            $user->saveOrFail();
+    
+            return $this->success(null, "Berhasil mengubah data user");
+        } catch (Exception $e) {
+            return $this->error('Gagal mengubah data user');
+        }
+    } 
 }
