@@ -19,6 +19,10 @@ class ColekController extends Controller
     public function __invoke(Request $request, User $user)
     {
         try {
+            if (!$user->routeNotificationForFcm()) {
+                return $this->error("User tidak memakai Android", 422);
+            }
+
             $user->notify(new ColekNotification(User::firstWhere('id', '=', Auth::id())));
         } catch (Exception $e) {
             return $this->error('Gagal mencolek teman', 500);
