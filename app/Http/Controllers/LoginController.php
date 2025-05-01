@@ -36,7 +36,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = $request->user();
 
-            $token = $user->createToken('user_token');
+            $token = $user->createToken('user_token', ["*"], now()->addDays(3));
 
             if (isset($validated['fcm_token'])) {
                 $userModel = User::find(Auth::id());
