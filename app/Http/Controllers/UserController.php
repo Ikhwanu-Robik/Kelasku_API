@@ -48,14 +48,14 @@ class UserController extends Controller
     }
 
     public function whoami(Request $request) {
-        // try {
-        //     $user = $request->user();
+        try {
+            $user = $request->user();
 
-        //     return $this->success($user, "Berhasil mendapatkan data diri");
-        // }
-        // catch (Exception $e) {
+            return $this->success($user, "Berhasil mendapatkan data diri");
+        }
+        catch (Exception $e) {
             return $this->error("Gagal mendapatkan data diri");
-        // }
+        }
     }
 
     /**
