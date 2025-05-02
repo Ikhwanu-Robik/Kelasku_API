@@ -29,6 +29,8 @@ Route::middleware(['throttle:api'])->group(function () {
         Route::post('/logout', LogoutController::class);
 
         Route::post('/users/{user}/colek', ColekController::class);
+
+        Route::get('/self', [UserController::class, 'whoami']);
     });
 
     Route::middleware(['auth:sanctum', EnsureUserIsAdmin::class])->group(function () {
